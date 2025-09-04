@@ -1,12 +1,3 @@
 # OOP Quiz
 
-
-
-Link: [oopquiz.fly.dev](https://oopquiz.fly.dev)
-
-
-
-### Screenshots:
-
-![promo1](promo1.png)
-![promo2](promo2.png)
+OOP Quiz is a minimal web application designed to help UniBuc FMI students practice OOP exam questions.
