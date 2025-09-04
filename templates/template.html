@@ -126,7 +126,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header" style="min-width:100%">
-            <a class="navbar-brand" href="#">OOP Quiz</a>
+            <a class="navbar-brand" href="/">OOP Quiz</a>
             <button type="button" class="btn btn-danger btn-header" id="nucompBtn2">👎</button>
             <button type="button" class="btn btn-success btn-header" id="compBtn2">👌</button>
 
@@ -160,28 +160,69 @@
         <div class="col col-lg-7">
 			<pre class="prettyprint">
 				<!-- the current problem's cpp file is read from the filesystem and shown inside the codeblock -->
-				<?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?>
+				<!-- <?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?> -->
+				{{ code }}
 			</pre>
-			<button type="button" class="btn btn-success" id="compBtn1">Compileaza</button>
-			<button style="float:right" type="button" class="btn btn-danger" id="nucompBtn1">Nu compileaza</button>
+			{% if not_answered %}
+			<a href="/compiles"><button type="button" class="btn btn-success" id="compBtn1">Compileaza</button></a>
+			<a href="/not_compiles"><button style="float:right" type="button" class="btn btn-danger" id="nucompBtn1">Nu compileaza</button></a>
+			{% endif %}
         </div>
         <div class="col col-lg-5">
-			<!-- the result following the input of the user regarding part of the answer is actually hidden with display:none in order to simplify
-				the backend logic -->
-            <h3 id="rezRaspuns"></h3>
-            <div id="raspCorect" style="display:none">
+			{% if correct_choice and (comp or not_comp) %}
+			<h3 id="rezRaspuns">Raspuns <span style="color:green">corect</span>. Programul {% if comp %} compileaza. {% elif not_comp %} nu compileaza. {% endif %}</h3>
+			{% elif not correct_choice and (comp or not_comp) %}
+			<h3 id="rezRaspuns">Raspuns <span style="color:red">incorect</span>. Programul {% if comp %} compileaza. {% elif not_comp %} nu compileaza. {% endif %}</h3>
+			{% endif %}
+
+			{% if comp %}
+			<div id="raspCorect"> 
                 <h4>Ce afiseaza programul respectiv?</h4>
-                <textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="afisTxt" style=></textarea>
-                <button class="btn btn-primary" id="afisBtn">Trimite raspuns</button>
+				<form action="/compiles" method="POST">
+					<textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="afisTxt" name="output_answer"></textarea>
+					<!--<button class="btn btn-primary" id="afisBtn">Trimite raspuns</button>-->
+					<input type="submit" class="btn btn-primary" id="afisBtn" value="Trimite raspuns"/>
+				{% if answered and correct_answer %}
+				<div id="goodRasp">
+					<h3 style="color:green;">Corect</h3><pre class="alert alert-success" role="alert">{{ answer_stdout }}</pre>
+					<button  class="btn btn-primary" onclick="next()">Problema urmatoare</button>
+				</div>
+				{% elif answered and not correct_answer %}
+				<div id="errRasp">
+					<h3 style="color:red;">Gresit</h3>
+					<h4>Raspunsul tau:</h4>
+					<pre class="alert alert-danger" role="alert">{{ answered_value }}</pre>
+					<h4>Raspunsul corect:</h4>
+					<h3 style="color:green;">Corect</h3><pre class="alert alert-success" role="alert">{{ answer_stdout }}</pre>
+					<button  class="btn btn-primary" onclick="next()">Problema urmatoare</button>
+				</div>
+				{% endif %}
             </div>
-            <div id="raspGresit" style="display:none">
+			{% elif not_comp %}
+            <div id="raspGresit">
                 <h4>Eroarea:</h4>
-                <pre class="alert alert-danger" id="errProb" role="alert"></pre>
+				<pre class="alert alert-danger" id="errProb" role="alert">{{ stdout }}</pre>
                 <h4>Modifica sursa astfel incat sa compileze:</h4>
-                <textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="errTxt"><?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?></textarea>
-                <div id="errRasp"></div>
-                <button  class="btn btn-primary" id="errBtn">Trimite sursa</button>
+				<form action="/not_compiles" method="POST">
+					<textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="errTxt" name="source_code">{{ code }}</textarea>
+					<!-- <?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?> -->
+					{% if answered and correct_answer %}
+					<div id="goodRasp">
+						<h3 style="color:green;">Corect</h3><button  class="btn btn-primary" onclick="next()">Problema urmatoare</button>
+					</div>
+					{% elif answered and not correct_answer %}
+					<div id="errRasp">
+						<h3 style="color:red;">Gresit</h3><pre class="alert alert-danger" role="alert">{{ answer_stdout }}</pre>
+						<button  class="btn btn-primary" onclick="next()">Problema urmatoare</button>
+					</div>
+					{% endif %}
+				<!-- <button  class="btn btn-primary" id="errBtn">Trimite sursa</button> -->
+					{% if not answered %}
+					<input type="submit" class="btn btn-primary" id="errBtn" value="Trimite sursa"/>
+					{% endif %}
+				</form>
             </div>
+			{% endif %}
         </div>
     </div>
     <div class="row" style="margin-top:50px;margin-bottom:30px">
@@ -269,6 +310,8 @@ function escapeHtml(unsafe) {
 
 // TODO: replace this weird lambda and manual craft of ajax requests with something a bit more modern
 // and easier to read
+
+/*
 $(function () {
 
     var corect_buffer = '';
@@ -420,7 +463,7 @@ $(function () {
     });
 
 });
-
+*/
 </script>
 
 </body>
