@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 cwd = os.getcwd()
 
-default_problem = 1
+default_problem = 2
 compiler_timeout = 5
 
 def fetch_code(problem: int) -> str:
@@ -43,7 +43,7 @@ def handle_compile(compiles, problem, code, return_code, stdout):
     if not compiles:
         if return_code != 0:
             if request.method == 'GET':
-                return render_template('template.html', code=code, not_comp="true", not_answered=None, correct_choice="true", stdout=stdout)
+                return render_template('template.html', code=code, not_comp="true", textarea=code, not_answered=None, correct_choice="true", stdout=stdout)
             
             source = request.form['source_code']
             result = None
@@ -56,9 +56,9 @@ def handle_compile(compiles, problem, code, return_code, stdout):
 
                 result = subprocess.run(['g++', source_path, '-o', output_path], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=compiler_timeout)
             if result.returncode != 0:
-                return render_template('template.html', code=code, not_comp="true", not_answered=None, correct_choice=None, stdout=stdout, answered="true", correct_answer=None, answer_stdout=result.stdout)
+                return render_template('template.html', code=code, not_comp="true", textarea=source, not_answered=None, correct_choice=None, stdout=stdout, answered="true", correct_answer=None, answer_stdout=result.stdout)
             else:
-                return render_template('template.html', code=code, not_comp="true", not_answered=None, correct_choice=None, stdout=stdout, answered="true", correct_answer="true", answer_stdout=result.stdout)
+                return render_template('template.html', code=code, not_comp="true", textarea=source, not_answered=None, correct_choice=None, stdout=stdout, answered="true", correct_answer="true", answer_stdout=result.stdout)
         else:
             return render_template('template.html', code=code, comp="true", not_answered=None, correct_choice=None, stdout=stdout)
     else:
@@ -75,7 +75,7 @@ def handle_compile(compiles, problem, code, return_code, stdout):
             else:
                 return render_template('template.html', code=code, comp="true", correct_choice="true", correct_answer=None, answered="true", answer_stdout=result, answered_value=output)
         else:
-            return render_template('template.html', code=code, comp="false", correct_choice="false")
+            return render_template('template.html', code=code, not_comp="true", textarea=code, stdout=stdout)
 
 @app.route('/')
 def index():

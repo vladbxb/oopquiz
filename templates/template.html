@@ -181,7 +181,9 @@
 				<form action="/compiles" method="POST">
 					<textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="afisTxt" name="output_answer"></textarea>
 					<!--<button class="btn btn-primary" id="afisBtn">Trimite raspuns</button>-->
+					{% if not answered %}
 					<input type="submit" class="btn btn-primary" id="afisBtn" value="Trimite raspuns"/>
+					{% endif %}
 				{% if answered and correct_answer %}
 				<div id="goodRasp">
 					<h3 style="color:green;">Corect</h3><pre class="alert alert-success" role="alert">{{ answer_stdout }}</pre>
@@ -204,7 +206,7 @@
 				<pre class="alert alert-danger" id="errProb" role="alert">{{ stdout }}</pre>
                 <h4>Modifica sursa astfel incat sa compileze:</h4>
 				<form action="/not_compiles" method="POST">
-					<textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="errTxt" name="source_code">{{ code }}</textarea>
+					<textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="errTxt" name="source_code">{{ textarea }}</textarea>
 					<!-- <?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?> -->
 					{% if answered and correct_answer %}
 					<div id="goodRasp">
