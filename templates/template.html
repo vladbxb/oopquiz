@@ -163,7 +163,7 @@
 				<!-- <?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?> -->
 				{{ code }}
 			</pre>
-			{% if not_answered %}
+			{% if compile_answered %}
 			<a href="/compiles"><button type="button" class="btn btn-success" id="compBtn1">Compileaza</button></a>
 			<a href="/not_compiles"><button style="float:right" type="button" class="btn btn-danger" id="nucompBtn1">Nu compileaza</button></a>
 			{% endif %}
@@ -181,15 +181,15 @@
 				<form action="/compiles" method="POST">
 					<textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="afisTxt" name="output_answer"></textarea>
 					<!--<button class="btn btn-primary" id="afisBtn">Trimite raspuns</button>-->
-					{% if not answered %}
+					{% if not textarea_answered %}
 					<input type="submit" class="btn btn-primary" id="afisBtn" value="Trimite raspuns"/>
 					{% endif %}
-				{% if answered and correct_answer %}
+				{% if textarea_answered and correct_answer %}
 				<div id="goodRasp">
 					<h3 style="color:green;">Corect</h3><pre class="alert alert-success" role="alert">{{ answer_stdout }}</pre>
 					<button  class="btn btn-primary" onclick="next()">Problema urmatoare</button>
 				</div>
-				{% elif answered and not correct_answer %}
+				{% elif textarea_answered and not correct_answer %}
 				<div id="errRasp">
 					<h3 style="color:red;">Gresit</h3>
 					<h4>Raspunsul tau:</h4>
@@ -208,18 +208,18 @@
 				<form action="/not_compiles" method="POST">
 					<textarea style="height:300px;max-width:100%;margin-bottom:20px" class="form-control" id="errTxt" name="source_code">{{ textarea }}</textarea>
 					<!-- <?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?> -->
-					{% if answered and correct_answer %}
+					{% if textarea_answered and correct_answer %}
 					<div id="goodRasp">
 						<h3 style="color:green;">Corect</h3><button  class="btn btn-primary" onclick="next()">Problema urmatoare</button>
 					</div>
-					{% elif answered and not correct_answer %}
+					{% elif textarea_answered and not correct_answer %}
 					<div id="errRasp">
 						<h3 style="color:red;">Gresit</h3><pre class="alert alert-danger" role="alert">{{ answer_stdout }}</pre>
 						<button  class="btn btn-primary" onclick="next()">Problema urmatoare</button>
 					</div>
 					{% endif %}
 				<!-- <button  class="btn btn-primary" id="errBtn">Trimite sursa</button> -->
-					{% if not answered %}
+					{% if not textarea_answered %}
 					<input type="submit" class="btn btn-primary" id="errBtn" value="Trimite sursa"/>
 					{% endif %}
 				</form>
