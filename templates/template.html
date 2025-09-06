@@ -129,20 +129,19 @@
             <a class="navbar-brand" href="/">OOP Quiz</a>
             <button type="button" class="btn btn-danger btn-header" id="nucompBtn2">👎</button>
             <button type="button" class="btn btn-success btn-header" id="compBtn2">👌</button>
-
-			<span style="float:right" class="navbar-brand" href="#">
-				<!-- assuming a session cookie is stored in which each problem is marked as solved, untried or failed -->
-				<span style="color:green">
-					<!-- this should count how many are solved -->
-					<?php $ctr=0; foreach($_SESSION['solved'] as $prob) {if ($prob=='solved') $ctr+=1;}; echo $ctr; ?>
-				</span> / 
-				<span style="color:red">
-					<!-- unsolved -->
-					<?php $ctr=0; foreach($_SESSION['solved'] as $prob) {if ($prob=='wrong') $ctr+=1;}; echo $ctr; ?>
-				</span> / 
-				<!-- and this is just the amount of problems which haven't been solved, subtracted from the total -->
-				<?php echo count($probleme)-count($_SESSION['solved']); ?>
-			</span>
+		<span style="float:right" class="navbar-brand" href="#">
+			<!-- assuming a session cookie is stored in which each problem is marked as solved, untried or failed -->
+			<span style="color:green">
+				<!-- this should count how many are solved -->
+				<?php $ctr=0; foreach($_SESSION['solved'] as $prob) {if ($prob=='solved') $ctr+=1;}; echo $ctr; ?>
+			</span> / 
+			<span style="color:red">
+				<!-- unsolved -->
+				<?php $ctr=0; foreach($_SESSION['solved'] as $prob) {if ($prob=='wrong') $ctr+=1;}; echo $ctr; ?>
+			</span> / 
+			<!-- and this is just the amount of problems which haven't been solved, subtracted from the total -->
+			<?php echo count($probleme)-count($_SESSION['solved']); ?>
+		</span>
         </div>
         <!--/.nav-collapse -->
     </div>
@@ -163,7 +162,7 @@
 				<!-- <?php echo htmlentities(file_get_contents('surse/prob'.$problema_id.'.cpp')); ?> -->
 				{{ code }}
 			</pre>
-			{% if compile_answered %}
+			{% if not compile_answered %}
 			<a href="/compiles"><button type="button" class="btn btn-success" id="compBtn1">Compileaza</button></a>
 			<a href="/not_compiles"><button style="float:right" type="button" class="btn btn-danger" id="nucompBtn1">Nu compileaza</button></a>
 			{% endif %}
